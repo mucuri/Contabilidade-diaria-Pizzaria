@@ -25,6 +25,10 @@ const App: React.FC = () => {
     setPizzaCounts(prev => ({ ...prev, [type]: prev[type] + 1 }));
   }, []);
 
+  const handleRemovePizza = useCallback((type: keyof PizzaCounts) => {
+    setPizzaCounts(prev => ({ ...prev, [type]: Math.max(0, prev[type] - 1) }));
+  }, []);
+
   const handleAddPayment = useCallback((type: PaymentType, amount: number) => {
     if (amount > 0) {
       setPayments(prev => ({ ...prev, [type]: [...prev[type], amount] }));
@@ -77,6 +81,7 @@ const App: React.FC = () => {
             pizzaCounts={pizzaCounts} 
             totalPizzas={totalPizzas}
             onAddPizza={handleAddPizza} 
+            onRemovePizza={handleRemovePizza}
           />
           <DeliverySection 
             entregasMucuri={entregasMucuri}

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card } from './Card';
-import { DeliveryIcon, PlusIcon } from './icons';
+import { DeliveryIcon, PlusIcon, MinusIcon } from './icons';
 
 interface DeliverySectionProps {
   entregasMucuri: number;
@@ -13,6 +13,35 @@ interface DeliverySectionProps {
   setEntregasNV: React.Dispatch<React.SetStateAction<number>>;
   motoboyNVCost: number;
 }
+
+const Counter: React.FC<{
+  label: string;
+  count: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+}> = ({ label, count, onIncrement, onDecrement }) => (
+    <div className="flex items-center justify-between">
+        <span className="font-medium text-slate-600">{label}:</span>
+        <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold">{count}</span>
+            <button
+                onClick={onDecrement}
+                disabled={count === 0}
+                className="p-2 bg-slate-200 text-slate-600 rounded-md hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-slate-400"
+                aria-label={`Remover um ${label}`}
+            >
+                <MinusIcon />
+            </button>
+            <button
+                onClick={onIncrement}
+                className="p-2 bg-slate-700 text-white rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
+                aria-label={`Adicionar um ${label}`}
+            >
+                <PlusIcon />
+            </button>
+        </div>
+    </div>
+);
 
 export const DeliverySection: React.FC<DeliverySectionProps> = (props) => {
   const {
@@ -35,48 +64,44 @@ export const DeliverySection: React.FC<DeliverySectionProps> = (props) => {
     <Card title="Entregas" icon={<DeliveryIcon />}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Mucuri */}
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <h3 className="font-bold text-lg mb-3 text-slate-700">Mucuri</h3>
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-medium text-slate-600">Total de Entregas:</span>
-            <span className="text-2xl font-bold">{entregasMucuri}</span>
-          </div>
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col gap-3">
+          <h3 className="font-bold text-lg text-slate-700">Mucuri</h3>
+          <Counter
+            label="Entregas"
+            count={entregasMucuri}
+            onIncrement={() => setEntregasMucuri(prev => prev + 1)}
+            onDecrement={() => setEntregasMucuri(prev => Math.max(0, prev - 1))}
+          />
+          <div className="flex items-center justify-between pt-3 border-t border-slate-200">
             <span className="font-medium text-slate-600">Valor Motoboy:</span>
             <span className="font-bold text-green-600">R$ {motoboyMucuriCost.toFixed(2)}</span>
           </div>
-          <button
-            onClick={() => setEntregasMucuri(prev => prev + 1)}
-            className="w-full flex items-center justify-center gap-2 bg-slate-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700"
-          >
-            <PlusIcon /> Adicionar Entrega
-          </button>
         </div>
 
         {/* Nova Viçosa */}
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <h3 className="font-bold text-lg mb-3 text-slate-700">Nova Viçosa</h3>
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-medium text-slate-600">Remessas:</span>
-            <span className="text-2xl font-bold">{remessasNV}</span>
-          </div>
-           <div className="flex items-center justify-between mb-3">
-            <span className="font-medium text-slate-600">Total de Entregas:</span>
-            <span className="text-2xl font-bold">{entregasNV}</span>
-          </div>
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col gap-3">
+          <h3 className="font-bold text-lg text-slate-700">Nova Viçosa</h3>
+          <Counter
+            label="Remessas"
+            count={remessasNV}
+            onIncrement={() => setRemessasNV(prev => prev + 1)}
+            onDecrement={() => setRemessasNV(prev => Math.max(0, prev - 1))}
+          />
+           <Counter
+            label="Entregas"
+            count={entregasNV}
+            onIncrement={() => setEntregasNV(prev => prev + 1)}
+            onDecrement={() => setEntregasNV(prev => Math.max(0, prev - 1))}
+          />
+          <div className="flex items-center justify-between pt-3 border-t border-slate-200">
             <span className="font-medium text-slate-600">Valor Motoboy:</span>
             <span className="font-bold text-green-600">R$ {motoboyNVCost.toFixed(2)}</span>
           </div>
-          <div className="space-y-2">
-            <button
-              onClick={() => setRemessasNV(prev => prev + 1)}
-              className="w-full flex items-center justify-center gap-2 bg-slate-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-slate-800 transition-colors"
-            >
-              <PlusIcon /> Adicionar Remessa
-            </button>
+          <div className="pt-3 border-t border-slate-200">
+            <label htmlFor="nv-lote" className="block text-sm font-medium text-slate-600 mb-1">Adicionar entregas em lote:</label>
             <div className="flex gap-2">
               <input
+                id="nv-lote"
                 type="number"
                 value={nvDeliveriesInput}
                 onChange={(e) => setNvDeliveriesInput(e.target.value)}
