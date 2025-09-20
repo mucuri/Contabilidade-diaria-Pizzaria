@@ -1,0 +1,5 @@
+{
+  "name": "Sistema de Pizzaria Bella Napoli",
+  "description": "Um aplicativo moderno para gerenciar as operações diárias da Pizzaria Bella Napoli, incluindo contagem de pizzas, controle de entregas, registro de pagamentos e resumo do dia.",
+  "requestFramePermissions": []
+}
